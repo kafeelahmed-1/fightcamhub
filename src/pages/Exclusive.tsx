@@ -29,8 +29,6 @@ export default function Exclusive() {
           description: "Premium clips reserved for the Exclusive Hub community.",
         }}
         monetizationUrl="https://www.effectivecpmnetwork.com/nsi7cseg?key=00a0faf43d9814220bf1d3cbc06892fa"
-        adKey="ec6126ab593bb793361e5f680f0aacc7"
-        adScriptSrc="https://www.highperformanceformat.com/ec6126ab593bb793361e5f680f0aacc7/invoke.js"
       />
     </>
   );
