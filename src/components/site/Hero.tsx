@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Link2, Radio, ChevronDown } from "lucide-react";
 
@@ -26,6 +26,29 @@ export function Hero({
   liveButtonLabel = "Live Fights",
 }: HeroProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const touchStartY = useRef<number | null>(null);
+
+  function scrollToTarget() {
+    const chat = document.getElementById("live-chat");
+    const live = document.getElementById("live");
+    const target = chat || live;
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function onTouchStart(e: React.TouchEvent) {
+    touchStartY.current = e.touches[0].clientY;
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchStartY.current == null) return;
+    const endY = e.changedTouches[0].clientY;
+    const delta = touchStartY.current - endY;
+    // if user swiped up or down enough, trigger scroll
+    if (Math.abs(delta) > 50) {
+      scrollToTarget();
+    }
+    touchStartY.current = null;
+  }
 
   useEffect(() => {
     // Preload hero image for immediate display
@@ -69,7 +92,7 @@ export function Hero({
         <div className="absolute inset-0" style={{ backgroundImage: "var(--gradient-hero)" }} />
       </div>
 
-      <div className="container-site relative pb-10 pt-16 sm:pt-20 lg:pt-28 flex items-center justify-center min-h-screen">
+      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="container-site relative pb-10 pt-16 sm:pt-20 lg:pt-28 flex items-center justify-center min-h-screen">
         <div className="max-w-2xl text-center">
           <span className="section-eyebrow live-dot gap-2 justify-center inline-flex">{eyebrow}</span>
           <h1 className="mt-4 text-2xl font-bold uppercase leading-[1.05] sm:text-3xl lg:text-4xl">
@@ -94,9 +117,11 @@ export function Hero({
             </Link>
           </div>
 
-          <div className="mt-12 flex flex-col items-center gap-2 animate-bounce">
-            <p className="text-xs text-muted-foreground">More Content Waiting</p>
-            <ChevronDown className="h-5 w-5 text-primary" />
+          <div className="mt-6 flex justify-center">
+            <button onClick={scrollToTarget} aria-label="Scroll to live" className="flex flex-col items-center gap-2 animate-bounce">
+              <p className="text-xs text-muted-foreground text-center">More Content Waiting</p>
+              <ChevronDown className="h-5 w-5 text-primary" />
+            </button>
           </div>
         </div>
       </div>

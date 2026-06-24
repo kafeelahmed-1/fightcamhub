@@ -95,7 +95,7 @@ export function LiveChat({ monetizationUrl = "https://consciousdunkvastly.com/hu
   };
 
   return (
-    <section className="container-site py-8">
+    <section id="live-chat" className="container-site py-8">
       <SectionHeading
         eyebrow="Premium Chat"
         title="Active Stream Portal"
