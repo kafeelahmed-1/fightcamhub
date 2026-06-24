@@ -1,28 +1,50 @@
 import { useRef, useState } from "react";
-import { ExternalLink, Volume2, VolumeX, MessageCircle, Bookmark } from "lucide-react";
+import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
 
-const REACTIONS = ["❤️", "🔥", "😮", "👊", "😂"] as const;
-
-interface FloatingReaction {
+interface FloatingHeart {
   id: number;
-  emoji: string;
   left: number;
+  scale: number;
+  duration: number;
+  delay: number;
 }
 
-export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
+export function LiveCard({ video }: { video: VideoItem }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
-  const [floats, setFloats] = useState<FloatingReaction[]>([]);
-  const [counts, setCounts] = useState<Record<string, number>>(video.reactions ?? {});
+  const [hearts, setHearts] = useState<FloatingHeart[]>([]);
   const [saved, setSaved] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
-  const react = (emoji: string) => {
-    const id = Date.now() + Math.random();
-    const left = 10 + Math.random() * 70;
-    setFloats((f) => [...f, { id, emoji, left }]);
-    setCounts((c) => ({ ...c, [emoji]: (c[emoji] ?? 0) + 1 }));
-    setTimeout(() => setFloats((f) => f.filter((x) => x.id !== id)), 1600);
+  const triggerHeartsBurst = () => {
+    // Generate an organic burst stream of 5-8 hearts mimicking FB Live
+    const burstCount = Math.floor(Math.random() * 4) + 5;
+    const newHearts: FloatingHeart[] = [];
+
+    for (let i = 0; i < burstCount; i++) {
+      newHearts.push({
+        id: Date.now() + Math.random() + i,
+        // Floats up near the right side where the interaction happens
+        left: 78 + (Math.random() * 14 - 7), 
+        scale: 0.7 + Math.random() * 0.5,
+        duration: 2.2 + Math.random() * 0.8, 
+        delay: i * 0.12 
+      });
+    }
+
+    setHearts((prev) => [...prev, ...newHearts]);
+
+    setTimeout(() => {
+      setHearts((prev) => prev.filter((h) => !newHearts.some((nh) => nh.id === h.id)));
+    }, 3500);
+  };
+
+  const handleLikeClick = () => {
+    if (!isLiked) {
+      triggerHeartsBurst();
+    }
+    setIsLiked(!isLiked);
   };
 
   const toggleMute = () => {
@@ -32,16 +54,11 @@ export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly
     setMuted(el.muted);
   };
 
-  const handleCardClick = () => {
-    window.open(monetizationUrl, "_blank");
-  };
-
   return (
-    <div 
-      className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card h-[500px] sm:h-[600px] cursor-pointer transition hover:shadow-glow hover:-translate-y-1"
-      onClick={handleCardClick}
-    >
-      <div className="relative w-full h-full overflow-hidden bg-black">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card w-full max-w-[400px] h-[520px] sm:h-[590px] transition hover:shadow-glow hover:-translate-y-1">
+      
+      {/* Tall Media Feed Container */}
+      <div className="relative w-full h-[440px] sm:h-[500px] overflow-hidden bg-black">
         <video
           ref={videoRef}
           className="h-full w-full object-cover"
@@ -51,92 +68,92 @@ export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly
           loop
           playsInline
           preload="metadata"
-          onClick={(e) => e.stopPropagation()}
         />
 
-        {/* Live badge */}
+        {/* Live status element */}
         <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-live px-3 py-1 text-xs font-bold uppercase tracking-wide text-destructive-foreground">
           <span className="live-dot" /> Live
         </div>
 
-        {/* Fire effect with hot count */}
-        {counts["🔥"] && (
-          <div className="absolute left-3 top-14 flex items-center gap-1.5 rounded-full bg-orange-600/80 px-3 py-1.5 text-sm font-bold text-white backdrop-blur">
-            <span className="text-lg animate-bounce">🔥</span>
-            <span>{(counts["🔥"] / 1000).toFixed(1)}K</span>
-          </div>
-        )}
-
-        {/* viewers */}
+        {/* Viewers layer */}
         <div className="absolute right-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">
           {video.views} watching
         </div>
 
-        {/* mute toggle */}
+        {/* Mute controller toggle */}
         <button
           type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleMute();
-          }}
+          onClick={toggleMute}
           aria-label={muted ? "Unmute" : "Mute"}
-          className="absolute bottom-3 right-3 grid h-9 w-9 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-primary"
+          className="absolute bottom-3 left-3 grid h-9 w-9 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition hover:bg-primary z-10"
         >
           {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </button>
 
-        {/* floating reactions */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" onClick={(e) => e.stopPropagation()}>
-          {floats.map((f) => (
+        {/* Facebook Live-Style Vertical Swaying Hearts Layer */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          {hearts.map((heart) => (
             <span
-              key={f.id}
-              className="reaction-float absolute bottom-12 text-2xl"
-              style={{ left: `${f.left}%` }}
+              key={heart.id}
+              className="absolute bottom-4 text-2xl animate-fb-live-heart drop-shadow-md user-select-none"
+              style={{
+                left: `${heart.left}%`,
+                transform: `scale(${heart.scale})`,
+                animationDuration: `${heart.duration}s`,
+                animationDelay: `${heart.delay}s`,
+                opacity: 0
+              }}
             >
-              {f.emoji}
+              ❤️
             </span>
           ))}
         </div>
       </div>
 
-      <div className="p-4" onClick={handleCardClick}>
-        <span className="section-eyebrow text-muted-foreground">{video.tag}</span>
-        <h3 className="mt-1 line-clamp-1 text-base font-bold">{video.title}</h3>
-        <p className="text-xs text-muted-foreground">{video.channel}</p>
-      </div>
+      {/* Action Bar Matched Perfectly to image_e8c29b.png */}
+      <div className="px-4 h-[80px] sm:h-[90px] flex items-center justify-between bg-card">
+        {/* Left Side Icons Bundle */}
+        <div className="flex items-center gap-5">
+          <button 
+            type="button" 
+            onClick={handleLikeClick}
+            className="transition hover:scale-110 active:scale-90 text-foreground"
+          >
+            <Heart className={`h-6 w-6 transition-colors ${isLiked ? "fill-destructive text-destructive" : ""}`} />
+          </button>
+          
+          <button 
+            type="button" 
+            className="transition hover:scale-110 active:scale-90 text-foreground"
+          >
+            <MessageCircle className="h-6 w-6" />
+          </button>
 
-      <div className="px-4 pb-4 flex flex-col gap-3">
-        {/* reaction bar at bottom */}
-        <div className="flex flex-wrap items-center gap-2" onClick={(e) => e.stopPropagation()}>
-          {REACTIONS.map((emoji) => (
-            <button
-              key={emoji}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                react(emoji);
-              }}
-              className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-2.5 py-1 text-sm transition hover:scale-110 hover:border-primary active:scale-95 cursor-pointer"
-            >
-              <span>{emoji}</span>
-              {counts[emoji] ? (
-                <span className="text-xs font-semibold text-muted-foreground">{counts[emoji]}</span>
-              ) : null}
-            </button>
-          ))}
+          <button 
+            type="button" 
+            className="transition hover:scale-110 active:scale-90 text-foreground"
+          >
+            <Repeat className="h-5 w-5" />
+          </button>
+
+          <button 
+            type="button" 
+            className="transition hover:scale-110 active:scale-90 text-foreground -rotate-12"
+          >
+            <Send className="h-5 w-5" />
+          </button>
         </div>
 
-        {/* direct link under reactions */}
-        <a
-          href={monetizationUrl}
-          onClick={(e) => e.stopPropagation()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline w-fit"
+        {/* Right Side Standalone Bookmark Icon */}
+        <button 
+          type="button" 
+          onClick={() => setSaved(!saved)}
+          className="transition hover:scale-110 active:scale-90 text-foreground"
         >
-          Direct link <ExternalLink className="h-3 w-3" />
-        </a>
+          <Bookmark className={`h-6 w-6 transition-colors ${saved ? "fill-primary text-primary" : ""}`} />
+        </button>
       </div>
+
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Link2, Radio, ChevronDown } from "lucide-react";
 
@@ -25,6 +25,15 @@ export function Hero({
   monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12",
   liveButtonLabel = "Live Fights",
 }: HeroProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    // Preload hero image for immediate display
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.src = image;
+  }, [image]);
+
   useEffect(() => {
     // Load external ad script
     const script = document.createElement("script");
@@ -41,14 +50,20 @@ export function Hero({
   }, []);
   return (
     <section className="relative overflow-hidden">
-      {/* Background image */}
+      {/* Background image - Optimized for fast loading */}
       <div className="absolute inset-0">
         <img
           src={image}
-          alt=""
+          alt="Hero background"
           width={1600}
           height={1024}
-          className="h-full w-full object-cover object-center"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          onLoad={() => setImageLoaded(true)}
+          className={`h-full w-full object-cover object-center transition-opacity duration-700 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
         <div className="absolute inset-0 bg-background/55" />
         <div className="absolute inset-0" style={{ backgroundImage: "var(--gradient-hero)" }} />
