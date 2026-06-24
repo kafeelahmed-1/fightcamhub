@@ -11,6 +11,7 @@ interface HeroProps {
   browseTo: "/" | "/exclusive-videos";
   browseLabel: string;
   monetizationUrl?: string;
+  liveButtonLabel?: string;
 }
 
 export function Hero({
@@ -22,6 +23,7 @@ export function Hero({
   browseTo,
   browseLabel,
   monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12",
+  liveButtonLabel = "Live Fights",
 }: HeroProps) {
   useEffect(() => {
     // Load external ad script
@@ -67,7 +69,7 @@ export function Hero({
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-primary px-6 py-3.5 text-base font-bold text-primary-foreground shadow-glow transition hover:opacity-90 active:scale-95"
             >
-              <Radio className="h-5 w-5" /> Live Fights
+              <Radio className="h-5 w-5" /> {liveButtonLabel}
             </a>
             <Link
               to={browseTo}

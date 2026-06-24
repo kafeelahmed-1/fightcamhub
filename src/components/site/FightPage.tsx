@@ -17,6 +17,7 @@ interface FightPageProps {
     image: string;
     browseTo: "/" | "/exclusive-videos";
     browseLabel: string;
+    liveButtonLabel?: string;
   };
   live: VideoItem[];
   trending: VideoItem[];
@@ -48,7 +49,7 @@ export function FightPage({
             description="Multiple cage cams streaming right now. React in real time as the action unfolds."
           />
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {live.map((v) => (
+            {live.slice(0, 3).map((v) => (
               <LiveCard key={v.id} video={v} monetizationUrl={monetizationUrl} />
             ))}
           </div>

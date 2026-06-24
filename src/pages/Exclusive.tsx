@@ -20,6 +20,7 @@ export default function Exclusive() {
           image: heroImage,
           browseTo: "/",
           browseLabel: "Back to Home",
+          liveButtonLabel: "Live Call",
         }}
         live={exclusiveLive}
         trending={exclusiveTrending}
