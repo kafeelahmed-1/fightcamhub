@@ -1,4 +1,5 @@
 import { Navbar } from "./Navbar";
+import type { ReactNode } from "react";
 import { Footer } from "./Footer";
 import { Hero } from "./Hero";
 import { LiveCard } from "./LiveCard";
@@ -23,6 +24,7 @@ interface FightPageProps {
   trending: VideoItem[];
   trendingHeading: { eyebrow: string; title: string; description: string };
   monetizationUrl?: string;
+  afterTrending?: ReactNode;
 }
 
 const DEFAULT_MONETIZATION_URL = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12";
@@ -33,6 +35,7 @@ export function FightPage({
   trending, 
   trendingHeading, 
   monetizationUrl = DEFAULT_MONETIZATION_URL,
+  afterTrending,
 }: FightPageProps) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -70,6 +73,9 @@ export function FightPage({
             ))}
           </div>
         </section>
+
+        {/* OPTIONAL: content rendered only on certain pages (e.g. Exclusive) */}
+        {afterTrending}
 
         {/* Ad after Videos */}
         <NativeAd 

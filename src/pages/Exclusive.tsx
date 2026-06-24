@@ -1,4 +1,5 @@
 import { FightPage } from "@/components/site/FightPage";
+import { LiveChat } from "@/components/site/LiveChat";
 import { Seo } from "@/components/site/Seo";
 import { exclusiveLive, exclusiveTrending } from "@/lib/videos";
 import heroImage from "@/assets/ehero.jfif";
@@ -30,6 +31,7 @@ export default function Exclusive() {
           description: "Premium clips reserved for the Exclusive Hub community.",
         }}
         monetizationUrl="https://www.effectivecpmnetwork.com/nsi7cseg?key=00a0faf43d9814220bf1d3cbc06892fa"
+        afterTrending={<LiveChat monetizationUrl="https://www.effectivecpmnetwork.com/nsi7cseg?key=00a0faf43d9814220bf1d3cbc06892fa" />}
       />
     </>
   );
