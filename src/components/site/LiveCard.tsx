@@ -1,34 +1,36 @@
 import { useRef, useState } from "react";
-import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send } from "lucide-react";
+import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send, Download } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
 
 interface FloatingHeart {
-  id: number;
+  id: string;
   left: number;
   scale: number;
   duration: number;
   delay: number;
 }
 
-export function LiveCard({ video }: { video: VideoItem }) {
+export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [hearts, setHearts] = useState<FloatingHeart[]>([]);
   const [saved, setSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  
+  const formattedLikes = "12K"; 
 
   const triggerHeartsBurst = () => {
-    // Generate an organic burst stream of 5-8 hearts mimicking FB Live
     const burstCount = Math.floor(Math.random() * 4) + 5;
     const newHearts: FloatingHeart[] = [];
 
     for (let i = 0; i < burstCount; i++) {
+      // Created a perfectly safe unique crypto-style string fallback ID
+      const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${i}`;
       newHearts.push({
-        id: Date.now() + Math.random() + i,
-        // Floats up near the right side where the interaction happens
-        left: 78 + (Math.random() * 14 - 7), 
+        id: uniqueId,
+        left: 75 + (Math.random() * 16 - 8), 
         scale: 0.7 + Math.random() * 0.5,
-        duration: 2.2 + Math.random() * 0.8, 
+        duration: 2.0 + Math.random() * 0.8, 
         delay: i * 0.12 
       });
     }
@@ -40,14 +42,14 @@ export function LiveCard({ video }: { video: VideoItem }) {
     }, 3500);
   };
 
-  const handleLikeClick = () => {
-    if (!isLiked) {
-      triggerHeartsBurst();
-    }
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    triggerHeartsBurst();
     setIsLiked(!isLiked);
   };
 
-  const toggleMute = () => {
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const el = videoRef.current;
     if (!el) return;
     el.muted = !el.muted;
@@ -55,10 +57,38 @@ export function LiveCard({ video }: { video: VideoItem }) {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card w-full max-w-[400px] h-[520px] sm:h-[590px] transition hover:shadow-glow hover:-translate-y-1">
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-md w-full max-w-[400px] h-[540px] sm:h-[610px] transition hover:-translate-y-1">
       
+      {/* Pure CSS Keyframes injection */}
+      <style>{`
+        @keyframes fbLiveHeart {
+          0% { 
+            transform: translateY(0) scale(0.6); 
+            opacity: 0; 
+          }
+          10% { 
+            opacity: 0.95; 
+          }
+          30% { 
+            transform: translateY(-100px) translateX(-15px) scale(1.1); 
+          }
+          60% { 
+            transform: translateY(-220px) translateX(15px) scale(0.95); 
+          }
+          100% { 
+            transform: translateY(-340px) translateX(-5px) scale(0.7); 
+            opacity: 0; 
+          }
+        }
+        .fb-heart-element {
+          animation-name: fbLiveHeart;
+          animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+          animation-fill-mode: forwards;
+        }
+      `}</style>
+
       {/* Tall Media Feed Container */}
-      <div className="relative w-full h-[440px] sm:h-[500px] overflow-hidden bg-black">
+      <div className="relative w-full h-[430px] sm:h-[490px] overflow-hidden bg-black">
         <video
           ref={videoRef}
           className="h-full w-full object-cover"
@@ -70,9 +100,9 @@ export function LiveCard({ video }: { video: VideoItem }) {
           preload="metadata"
         />
 
-        {/* Live status element */}
-        <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-live px-3 py-1 text-xs font-bold uppercase tracking-wide text-destructive-foreground">
-          <span className="live-dot" /> Live
+        {/* Live status badge */}
+        <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+          <span className="h-2 w-2 rounded-full bg-white animate-pulse" /> Live
         </div>
 
         {/* Viewers layer */}
@@ -90,12 +120,12 @@ export function LiveCard({ video }: { video: VideoItem }) {
           {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </button>
 
-        {/* Facebook Live-Style Vertical Swaying Hearts Layer */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Facebook Live-Style Floating Layer */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden z-20">
           {hearts.map((heart) => (
             <span
               key={heart.id}
-              className="absolute bottom-4 text-2xl animate-fb-live-heart drop-shadow-md user-select-none"
+              className="absolute bottom-6 text-2xl fb-heart-element drop-shadow-lg select-none"
               style={{
                 left: `${heart.left}%`,
                 transform: `scale(${heart.scale})`,
@@ -110,8 +140,8 @@ export function LiveCard({ video }: { video: VideoItem }) {
         </div>
       </div>
 
-      {/* Action Bar Matched Perfectly to image_e8c29b.png */}
-      <div className="px-4 h-[80px] sm:h-[90px] flex items-center justify-between bg-card">
+      {/* Action Bar Layout Bundle */}
+      <div className="px-4 pt-4 flex items-center justify-between bg-card">
         {/* Left Side Icons Bundle */}
         <div className="flex items-center gap-5">
           <button 
@@ -144,14 +174,37 @@ export function LiveCard({ video }: { video: VideoItem }) {
           </button>
         </div>
 
-        {/* Right Side Standalone Bookmark Icon */}
-        <button 
-          type="button" 
-          onClick={() => setSaved(!saved)}
-          className="transition hover:scale-110 active:scale-90 text-foreground"
-        >
-          <Bookmark className={`h-6 w-6 transition-colors ${saved ? "fill-primary text-primary" : ""}`} />
-        </button>
+        {/* Right Side Icons Bundle (Bookmark + Monetized Download Link) */}
+        <div className="flex items-center gap-4">
+          <a
+            href={monetizationUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="transition hover:scale-110 active:scale-90 text-foreground"
+            aria-label="Download Content"
+          >
+            <Download className="h-6 w-6" />
+          </a>
+
+          <button 
+            type="button" 
+            onClick={(e) => {
+              e.stopPropagation();
+              setSaved(!saved);
+            }}
+            className="transition hover:scale-110 active:scale-90 text-foreground"
+          >
+            <Bookmark className={`h-6 w-6 transition-colors ${saved ? "fill-primary text-primary" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Counter block */}
+      <div className="px-4 pb-4 pt-2 bg-card">
+        <span className="text-sm font-bold text-foreground">
+          {formattedLikes} likes
+        </span>
       </div>
 
     </div>
