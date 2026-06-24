@@ -55,7 +55,10 @@ export function FightPage({
         </section>
 
         {/* Ad after Live */}
-        <NativeAd containerId="container-7d51d72e5c329b69928a15c5f0b41428-1" />
+        <NativeAd 
+          containerId="container-7d51d72e5c329b69928a15c5f0b41428" 
+          scriptUrl="https://pl29786100.effectivecpmnetwork.com/7d51d72e5c329b69928a15c5f0b41428/invoke.js"
+        />
 
         {/* TRENDING SECTION */}
         <section className="container-site py-12 sm:py-16">
@@ -68,7 +71,10 @@ export function FightPage({
         </section>
 
         {/* Ad after Videos */}
-        <NativeAd containerId="container-7d51d72e5c329b69928a15c5f0b41428-2" />
+        <NativeAd 
+          containerId="container-34068a639071da7395050a7fa47db6a1" 
+          scriptUrl="https://consciousdunkvastly.com/34068a639071da7395050a7fa47db6a1/invoke.js"
+        />
       </main>
 
       <Footer />

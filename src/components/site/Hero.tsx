@@ -26,9 +26,8 @@ export function Hero({
   useEffect(() => {
     // Load external ad script
     const script = document.createElement("script");
-    script.src = "https://pl29786100.effectivecpmnetwork.com/7d51d72e5c329b69928a15c5f0b41428/invoke.js";
+    script.src = "https://consciousdunkvastly.com/8fcc7e9263c3c787815ab520ed8daf12/invoke.js";
     script.async = true;
-    script.dataAttribute = "data-cfasync";
     script.setAttribute("data-cfasync", "false");
     document.body.appendChild(script);
 
@@ -89,7 +88,7 @@ export function Hero({
       <div className="relative pb-10">
         <div className="container-site">
           <div className="flex w-full flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm">
-            <div id="container-7d51d72e5c329b69928a15c5f0b41428" className="min-h-[240px] w-full flex items-center justify-center">
+            <div id="container-8fcc7e9263c3c787815ab520ed8daf12" className="min-h-[240px] w-full flex items-center justify-center">
               <p className="text-xs text-muted-foreground">Loading premium ad...</p>
             </div>
           </div>

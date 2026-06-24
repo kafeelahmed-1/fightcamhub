@@ -1,22 +1,20 @@
 import { useEffect } from "react";
 
-const SCRIPT_HASH = "7d51d72e5c329b69928a15c5f0b41428";
-const SCRIPT_URL = `https://pl29786100.effectivecpmnetwork.com/${SCRIPT_HASH}/invoke.js`;
-
 interface NativeAdProps {
   containerId: string;
+  scriptUrl: string;
 }
 
-export function NativeAd({ containerId }: NativeAdProps) {
+export function NativeAd({ containerId, scriptUrl }: NativeAdProps) {
   useEffect(() => {
-    // Load the external ad script once
+    // Load the external ad script once per unique script URL
     const existingScript = document.querySelector(
-      `script[src="${SCRIPT_URL}"]`
+      `script[src="${scriptUrl}"]`
     );
     
     if (!existingScript) {
       const script = document.createElement("script");
-      script.src = SCRIPT_URL;
+      script.src = scriptUrl;
       script.async = true;
       script.setAttribute("data-cfasync", "false");
       document.body.appendChild(script);
@@ -27,7 +25,7 @@ export function NativeAd({ containerId }: NativeAdProps) {
         }
       };
     }
-  }, []);
+  }, [scriptUrl]);
 
   return (
     <div className="relative py-10">
