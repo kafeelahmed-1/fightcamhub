@@ -4,7 +4,7 @@ import { Hero } from "./Hero";
 import { LiveCard } from "./LiveCard";
 import { VideoCard } from "./VideoCard";
 import { AdPlaceholder } from "./AdPlaceholder";
-import { AdLeaderboard } from "./AdLeaderboard";
+import { NativeAd } from "./NativeAd";
 import { SectionHeading } from "./SectionHeading";
 import type { VideoItem } from "@/lib/videos";
 
@@ -22,13 +22,9 @@ interface FightPageProps {
   trending: VideoItem[];
   trendingHeading: { eyebrow: string; title: string; description: string };
   monetizationUrl?: string;
-  adKey?: string;
-  adScriptSrc?: string;
 }
 
 const DEFAULT_MONETIZATION_URL = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12";
-const DEFAULT_AD_KEY = "591e31908d117513a5daf867dcb90455";
-const DEFAULT_AD_SCRIPT = "https://consciousdunkvastly.com/591e31908d117513a5daf867dcb90455/invoke.js";
 
 export function FightPage({ 
   hero, 
@@ -36,8 +32,6 @@ export function FightPage({
   trending, 
   trendingHeading, 
   monetizationUrl = DEFAULT_MONETIZATION_URL,
-  adKey = DEFAULT_AD_KEY,
-  adScriptSrc = DEFAULT_AD_SCRIPT
 }: FightPageProps) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -61,7 +55,7 @@ export function FightPage({
         </section>
 
         {/* Ad after Live */}
-        <AdLeaderboard containerId="at-ad-leaderboard-1" adKey={adKey} scriptSrc={adScriptSrc} />
+        <NativeAd containerId="container-7d51d72e5c329b69928a15c5f0b41428-1" />
 
         {/* TRENDING SECTION */}
         <section className="container-site py-12 sm:py-16">
@@ -74,7 +68,7 @@ export function FightPage({
         </section>
 
         {/* Ad after Videos */}
-        <AdLeaderboard containerId="at-ad-leaderboard-2" adKey={adKey} scriptSrc={adScriptSrc} />
+        <NativeAd containerId="container-7d51d72e5c329b69928a15c5f0b41428-2" />
       </main>
 
       <Footer />
