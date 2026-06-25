@@ -95,7 +95,7 @@ export function Hero({
       <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="container-site relative pb-4 pt-12 sm:pt-14 lg:pt-16 flex items-start justify-center">
         <div className="max-w-2xl text-center">
           <span className="section-eyebrow live-dot gap-2 justify-center inline-flex">{eyebrow}</span>
-          <h1 className="mt-4 text-2xl font-bold uppercase leading-[1.05] sm:text-3xl lg:text-4xl">
+          <h1 className="mt-1 text-2xl font-bold uppercase leading-[1.05] sm:text-3xl lg:text-4xl">
             {title} <span className="text-gradient">{highlight}</span>
           </h1>
           <p className="mt-4 max-w-xl text-sm text-muted-foreground sm:text-base mx-auto">{description}</p>
