@@ -119,7 +119,7 @@ export function Hero({
 
           <div className="mt-6 flex justify-center">
             <button onClick={scrollToTarget} aria-label="Scroll to live" className="flex flex-col items-center gap-2 animate-bounce">
-              <p className="text-xs text-muted-foreground text-center">More Content Waiting</p>
+              <p className="text-xs text-muted-foreground text-center">🔥 More Viral Clips Below ↓</p>
               <ChevronDown className="h-5 w-5 text-primary" />
             </button>
           </div>
