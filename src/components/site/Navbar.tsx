@@ -46,7 +46,7 @@ export function Navbar() {
             type="button"
             onClick={toggleTheme}
             aria-label="Toggle theme"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-secondary text-foreground transition hover:border-primary"
+            className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-lg border border-border bg-secondary text-foreground transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
@@ -55,7 +55,7 @@ export function Navbar() {
             href="https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden rounded-lg bg-gradient-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow transition hover:opacity-90 sm:inline-flex"
+            className="inline-flex items-center justify-center rounded-lg bg-gradient-primary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-bold text-primary-foreground shadow-glow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             Watch Live
           </a>
@@ -64,7 +64,7 @@ export function Navbar() {
             type="button"
             onClick={() => setOpen((o) => !o)}
             aria-label="Menu"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-secondary md:hidden"
+            className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-lg border border-border bg-secondary md:hidden focus:outline-none focus:ring-2 focus:ring-primary"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -89,15 +89,8 @@ export function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <a
-              href="https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
-              className="mt-1 rounded-lg bg-gradient-primary px-3 py-2.5 text-center text-sm font-bold text-primary-foreground shadow-glow"
-            >
-              Watch Live
-            </a>
+            {/* Watch Live is always visible in the header on all screen sizes so
+                we don't duplicate it inside the mobile menu. */}
           </nav>
         </div>
       ) : null}
