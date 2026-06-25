@@ -92,7 +92,7 @@ export function Hero({
         <div className="absolute inset-0" style={{ backgroundImage: "var(--gradient-hero)" }} />
       </div>
 
-      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="container-site relative pb-10 pt-16 sm:pt-20 lg:pt-28 flex items-center justify-center min-h-screen">
+      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="container-site relative pb-4 pt-12 sm:pt-14 lg:pt-16 flex items-start justify-center">
         <div className="max-w-2xl text-center">
           <span className="section-eyebrow live-dot gap-2 justify-center inline-flex">{eyebrow}</span>
           <h1 className="mt-4 text-2xl font-bold uppercase leading-[1.05] sm:text-3xl lg:text-4xl">
@@ -100,7 +100,7 @@ export function Hero({
           </h1>
           <p className="mt-4 max-w-xl text-sm text-muted-foreground sm:text-base mx-auto">{description}</p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
+          <div className="mt-7 flex flex-col gap-2 sm:flex-row sm:gap-2 sm:items-center sm:justify-center">
             <a
               href={monetizationUrl}
               target="_blank"
@@ -117,7 +117,7 @@ export function Hero({
             </Link>
           </div>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-3 flex justify-center">
             <button onClick={scrollToTarget} aria-label="Scroll to live" className="flex flex-col items-center gap-2 animate-bounce">
               <p className="text-xs text-muted-foreground text-center">🔥 More Viral Clips Below ↓</p>
               <ChevronDown className="h-5 w-5 text-primary" />
@@ -127,9 +127,9 @@ export function Hero({
       </div>
 
       {/* Native ad unit */}
-      <div className="relative pb-10">
+      <div className="relative pb-6">
         <div className="container-site">
-          <div className="flex w-full flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-6 backdrop-blur-sm">
+          <div className="flex w-full flex-col items-center justify-center rounded-xl border border-border bg-card/50 p-4 backdrop-blur-sm">
             <div id="container-8fcc7e9263c3c787815ab520ed8daf12" className="min-h-[240px] w-full flex items-center justify-center">
               <p className="text-xs text-muted-foreground">Loading premium ad...</p>
             </div>
