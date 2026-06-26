@@ -34,11 +34,8 @@ export default function PopunderModal({ delayMs = 10000 }: { delayMs?: number })
       }, delayMs);
     };
 
-    if (document.readyState === "complete") {
-      openAfterDelay();
-    } else {
-      window.addEventListener("load", openAfterDelay, { once: true });
-    }
+    // Start timer immediately when user enters the site (10 sec from now)
+    openAfterDelay();
 
     const cleanupTimer = () => {
       cancelled = true;
