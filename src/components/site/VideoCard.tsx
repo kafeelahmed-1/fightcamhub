@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Play, Pause, Maximize2 } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
 
@@ -10,11 +10,21 @@ interface FloatingReaction {
   left: number;
 }
 
-export function VideoCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
+let activeVideoId: string | null = null;
+
+const activateVideo = (id: string) => {
+  if (activeVideoId === id) return;
+  activeVideoId = id;
+  window.dispatchEvent(new CustomEvent("video:activate", { detail: { id } }));
+};
+
+export const VideoCard = memo(function VideoCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
   const [floats, setFloats] = useState<FloatingReaction[]>([]);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   const react = (emoji: string) => {
     const id = Date.now() + Math.random();
@@ -23,34 +33,98 @@ export function VideoCard({ video, monetizationUrl = "https://consciousdunkvastl
     setTimeout(() => setFloats((f) => f.filter((x) => x.id !== id)), 1600);
   };
 
-  const play = () => {
+  const play = useCallback(() => {
     const el = videoRef.current;
     if (!el) return;
-    el.requestFullscreen?.();
-    setStarted(true);
-    el.play();
-    setPlaying(true);
-  };
 
-  const pause = () => {
-    videoRef.current?.pause();
+    setStarted(true);
+    setShouldLoad(true);
+    setPlaying(true);
+    activateVideo(video.id);
+
+    if (el.getAttribute("src") !== video.src) {
+      el.src = video.src;
+      el.load();
+    }
+
+    void el.play().catch(() => undefined);
+  }, [video.id]);
+
+  const pause = useCallback(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.pause();
     setPlaying(false);
-  };
+  }, []);
 
   const watchFull = () => {
     window.open(monetizationUrl, "_blank");
   };
 
+  useEffect(() => {
+    const handleActivation = (event: Event) => {
+      const customEvent = event as CustomEvent<{ id: string }>;
+      if (customEvent.detail?.id !== video.id) {
+        pause();
+      }
+    };
+
+    window.addEventListener("video:activate", handleActivation as EventListener);
+    return () => window.removeEventListener("video:activate", handleActivation as EventListener);
+  }, [pause, video.id]);
+
+  useEffect(() => {
+    const element = mediaRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (!entry) return;
+
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.7) {
+          if (started && playing) {
+            void videoRef.current?.play().catch(() => undefined);
+          }
+        } else if (playing) {
+          pause();
+        }
+      },
+      { threshold: 0.7 },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [pause, playing, started]);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    if (!shouldLoad) {
+      el.pause();
+      el.removeAttribute("src");
+      el.load();
+      return;
+    }
+
+    if (el.getAttribute("src") !== video.src) {
+      el.src = video.src;
+      el.load();
+    }
+  }, [shouldLoad, video.src]);
+
+
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-card transition hover:-translate-y-1 hover:shadow-glow">
-      <div className="relative aspect-video overflow-hidden bg-black">
+      <div ref={mediaRef} className="relative aspect-video overflow-hidden bg-black">
         <video
           ref={videoRef}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          src={video.src}
+          src={shouldLoad ? video.src : ""}
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           muted
           onEnded={() => setPlaying(false)}
         />
@@ -142,4 +216,4 @@ export function VideoCard({ video, monetizationUrl = "https://consciousdunkvastl
       </div>
     </div>
   );
-}
+});

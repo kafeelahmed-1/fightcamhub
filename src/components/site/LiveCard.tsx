@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send, Download } from "lucide-react";
+import { memo, useEffect, useRef, useState } from "react";
+import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send, Download, Play } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
 
 interface FloatingHeart {
@@ -10,12 +10,14 @@ interface FloatingHeart {
   delay: number;
 }
 
-export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
+export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12", autoPlay = false }: { video: VideoItem; monetizationUrl?: string; autoPlay?: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [hearts, setHearts] = useState<FloatingHeart[]>([]);
   const [saved, setSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(autoPlay);
+  const [hasLoaded, setHasLoaded] = useState(false);
   
   const formattedLikes = "12K"; 
 
@@ -56,6 +58,56 @@ export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly
     setMuted(el.muted);
   };
 
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    if (!shouldLoad) {
+      el.pause();
+      if (el.getAttribute("src") !== video.src) {
+        el.src = video.src;
+      }
+      return;
+    }
+
+    if (el.getAttribute("src") !== video.src) {
+      el.src = video.src;
+    }
+
+    void el.play().catch(() => undefined);
+  }, [shouldLoad, video.src]);
+
+  useEffect(() => {
+    const handleActivation = (event: Event) => {
+      const customEvent = event as CustomEvent<{ id: string }>;
+      if (customEvent.detail?.id === video.id) return;
+
+      const el = videoRef.current;
+      if (!el) return;
+
+      el.pause();
+      setShouldLoad(false);
+    };
+
+    window.addEventListener("livecard:activate", handleActivation as EventListener);
+    return () => window.removeEventListener("livecard:activate", handleActivation as EventListener);
+  }, [video.id]);
+
+  const handlePlay = () => {
+    const el = videoRef.current;
+    if (!el) return;
+
+    window.dispatchEvent(new CustomEvent("livecard:activate", { detail: { id: video.id } }));
+    setShouldLoad(true);
+    setHasLoaded(true);
+
+    if (el.getAttribute("src") !== video.src) {
+      el.src = video.src;
+    }
+
+    void el.play().catch(() => undefined);
+  };
+
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-md w-full max-w-[400px] h-[540px] sm:h-[610px] transition hover:-translate-y-1">
       
@@ -93,12 +145,24 @@ export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly
           ref={videoRef}
           className="h-full w-full object-cover"
           src={video.src}
-          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
         />
+
+        {!shouldLoad ? (
+          <button
+            type="button"
+            onClick={handlePlay}
+            aria-label={`Play ${video.title}`}
+            className="absolute inset-0 grid place-items-center bg-black/30 transition hover:bg-black/40"
+          >
+            <span className="grid h-14 w-14 place-items-center rounded-full bg-white/90 text-black shadow-lg">
+              <Play className="ml-0.5 h-6 w-6" />
+            </span>
+          </button>
+        ) : null}
 
         {/* Live status badge */}
         <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
@@ -209,4 +273,4 @@ export function LiveCard({ video, monetizationUrl = "https://consciousdunkvastly
 
     </div>
   );
-}
+});

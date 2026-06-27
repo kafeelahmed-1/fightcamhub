@@ -52,8 +52,8 @@ export function FightPage({
             description="Multiple cage cams streaming right now. React in real time as the action unfolds."
           />
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {live.slice(0, 3).map((v) => (
-              <LiveCard key={v.id} video={v} monetizationUrl={monetizationUrl} />
+            {live.slice(0, 3).map((v, index) => (
+              <LiveCard key={v.id} video={v} monetizationUrl={monetizationUrl} autoPlay={index === 0} />
             ))}
           </div>
         </section>
