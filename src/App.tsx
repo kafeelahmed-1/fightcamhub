@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/lib/theme";
 import PopunderModal from "@/components/site/PopunderModal";
 import Home from "@/pages/Home";
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/exclusive-videos" element={<Exclusive />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Analytics />
     </ThemeProvider>
   );
 }
