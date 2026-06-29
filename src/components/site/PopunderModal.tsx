@@ -9,11 +9,11 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [, setHasInteracted] = useState(false);
   const timerRef = useRef<number | null>(null);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
 
   const SESSION_KEY = "premium_popunder_seen";
+  const triggerDelayMs = Math.max(delayMs, 22000);
 
   useEffect(() => {
     setMounted(true);
@@ -32,12 +32,11 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
       }
     };
 
-    // Open popunder after 22 seconds without requiring user interaction
+    // Open popunder after 22 seconds of the user being on the site
     timerRef.current = window.setTimeout(() => {
       if (popunderInjected) return;
       setIsVisible(true);
-      setHasInteracted(true);
-    }, delayMs);
+    }, triggerDelayMs);
 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
@@ -90,7 +89,6 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
 
   const closeModal = () => {
     setIsClosing(true);
-    setHasInteracted(true);
     if (!popunderInjected) {
       popunderInjected = true;
       try {
@@ -108,7 +106,6 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
   };
 
   const handleClaim = () => {
-    setHasInteracted(true);
     closeModal();
   };
 

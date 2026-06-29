@@ -19,7 +19,15 @@ const activateVideo = (id: string) => {
   window.dispatchEvent(new CustomEvent("video:activate", { detail: { id } }));
 };
 
-export const VideoCard = memo(function VideoCard({ video, monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12" }: { video: VideoItem; monetizationUrl?: string }) {
+export const VideoCard = memo(function VideoCard({
+  video,
+  monetizationUrl = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12",
+  showPosterOverlay = true,
+}: {
+  video: VideoItem;
+  monetizationUrl?: string;
+  showPosterOverlay?: boolean;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -139,12 +147,14 @@ export const VideoCard = memo(function VideoCard({ video, monetizationUrl = "htt
         </div>
 
         {/* Poster Overlay */}
-        <PosterOverlay
-          posterUrl={video.poster}
-          title={video.title}
-          isVisible={!started}
-          onPlayClick={play}
-        />
+        {showPosterOverlay && (
+          <PosterOverlay
+            posterUrl={video.poster}
+            title={video.title}
+            isVisible={!started}
+            onPlayClick={play}
+          />
+        )}
 
         {/* floating reactions */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">

@@ -25,6 +25,7 @@ interface FightPageProps {
   trendingHeading: { eyebrow: string; title: string; description: string };
   monetizationUrl?: string;
   afterTrending?: ReactNode;
+  showPosterOverlay?: boolean;
 }
 
 const DEFAULT_MONETIZATION_URL = "https://consciousdunkvastly.com/hu3d2ui1?key=c6dfa5e4b94e4987e31e7c7c7502de12";
@@ -36,6 +37,7 @@ export function FightPage({
   trendingHeading, 
   monetizationUrl = DEFAULT_MONETIZATION_URL,
   afterTrending,
+  showPosterOverlay = true,
 }: FightPageProps) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -69,7 +71,12 @@ export function FightPage({
           <SectionHeading {...trendingHeading} />
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {trending.map((v) => (
-              <VideoCard key={v.id} video={v} monetizationUrl={monetizationUrl} />
+              <VideoCard
+                key={v.id}
+                video={v}
+                monetizationUrl={monetizationUrl}
+                showPosterOverlay={showPosterOverlay}
+              />
             ))}
           </div>
         </section>

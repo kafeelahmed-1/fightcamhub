@@ -25,6 +25,7 @@ export default function Exclusive() {
         }}
         live={exclusiveLive}
         trending={exclusiveTrending}
+        showPosterOverlay={false}
         trendingHeading={{
           eyebrow: "Exclusive Drops",
           title: "Top Trending Exclusives",

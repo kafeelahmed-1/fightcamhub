@@ -23,6 +23,7 @@ export default function Home() {
         }}
         live={liveVideos}
         trending={trendingVideos}
+        showPosterOverlay={true}
         trendingHeading={{
           eyebrow: "Most Watched",
           title: "Top Trending Videos",
