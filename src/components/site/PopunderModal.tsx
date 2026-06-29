@@ -5,14 +5,13 @@ const POPUNDER_SCRIPT_URL =
   "https://consciousdunkvastly.com/79/7d/b0/797db0781a89da82e23e454fdda499db.js";
 let popunderInjected = false;
 
-export default function PopunderModal({ delayMs = 1200 }: { delayMs?: number }) {
+export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number }) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [, setHasInteracted] = useState(false);
   const timerRef = useRef<number | null>(null);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
-  const interactionTriggeredRef = useRef(false);
 
   const SESSION_KEY = "premium_popunder_seen";
 
@@ -33,23 +32,12 @@ export default function PopunderModal({ delayMs = 1200 }: { delayMs?: number }) 
       }
     };
 
-    const handleFirstInteraction = () => {
-      if (interactionTriggeredRef.current || popunderInjected) return;
-      interactionTriggeredRef.current = true;
-      cleanupTimer();
-
-      timerRef.current = window.setTimeout(() => {
-        if (popunderInjected) return;
-        setIsVisible(true);
-        setHasInteracted(true);
-      }, delayMs);
-    };
-
-    const events: Array<keyof WindowEventMap> = ["pointerdown", "keydown", "touchstart", "scroll"];
-
-    events.forEach((eventName) => {
-      window.addEventListener(eventName, handleFirstInteraction, { passive: true, capture: true });
-    });
+    // Open popunder after 22 seconds without requiring user interaction
+    timerRef.current = window.setTimeout(() => {
+      if (popunderInjected) return;
+      setIsVisible(true);
+      setHasInteracted(true);
+    }, delayMs);
 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
@@ -59,9 +47,6 @@ export default function PopunderModal({ delayMs = 1200 }: { delayMs?: number }) 
     window.addEventListener("beforeunload", cleanupTimer);
 
     return () => {
-      events.forEach((eventName) => {
-        window.removeEventListener(eventName, handleFirstInteraction, { capture: true });
-      });
       window.removeEventListener("beforeunload", cleanupTimer);
       cleanupTimer();
     };
