@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Play, Pause, Maximize2 } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
+import { PosterOverlay } from "./PosterOverlay";
 
 const REACTIONS = ["❤️", "🔥", "😮", "👊", "😂"] as const;
 
@@ -137,19 +138,13 @@ export const VideoCard = memo(function VideoCard({ video, monetizationUrl = "htt
           {video.duration}
         </div>
 
-        {/* Big center play overlay */}
-        {!started ? (
-          <button
-            type="button"
-            onClick={play}
-            aria-label={`Play ${video.title}`}
-            className="absolute inset-0 grid place-items-center bg-black/30 transition group-hover:bg-black/40"
-          >
-            <span className="grid h-14 w-14 place-items-center rounded-full bg-gradient-primary text-primary-foreground shadow-glow transition group-hover:scale-110">
-              <Play className="ml-0.5 h-6 w-6" />
-            </span>
-          </button>
-        ) : null}
+        {/* Poster Overlay */}
+        <PosterOverlay
+          posterUrl={video.poster}
+          title={video.title}
+          isVisible={!started}
+          onPlayClick={play}
+        />
 
         {/* floating reactions */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">

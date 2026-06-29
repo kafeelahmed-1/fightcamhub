@@ -1,6 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send, Download, Play } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
+import liveposter1 from "@/assets/data/fight/liveposter1.png";
+import liveposter2 from "@/assets/data/fight/liveposter2.png";
 
 interface FloatingHeart {
   id: string;
@@ -19,7 +21,16 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
   const [shouldLoad, setShouldLoad] = useState(autoPlay);
   const [hasLoaded, setHasLoaded] = useState(false);
   
-  const formattedLikes = "12K"; 
+  const formattedLikes = "12K";
+
+  // Get poster for live2 and live3 cards
+  const getPosterImage = () => {
+    if (video.id === "live-2") return liveposter1;
+    if (video.id === "live-3") return liveposter2;
+    return null;
+  };
+
+  const posterImage = getPosterImage(); 
 
   const triggerHeartsBurst = () => {
     const burstCount = Math.floor(Math.random() * 4) + 5;
@@ -152,16 +163,43 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
         />
 
         {!shouldLoad ? (
-          <button
-            type="button"
-            onClick={handlePlay}
-            aria-label={`Play ${video.title}`}
-            className="absolute inset-0 grid place-items-center bg-black/30 transition hover:bg-black/40"
-          >
-            <span className="grid h-14 w-14 place-items-center rounded-full bg-white/90 text-black shadow-lg">
-              <Play className="ml-0.5 h-6 w-6" />
-            </span>
-          </button>
+          posterImage ? (
+            <button
+              type="button"
+              onClick={handlePlay}
+              aria-label={`Play ${video.title}`}
+              className="absolute inset-0 overflow-hidden bg-black/20 transition hover:bg-black/30 group-hover:bg-black/40"
+            >
+              {/* Poster Image */}
+              <img
+                src={posterImage}
+                alt={video.title}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
+
+              {/* Play Button */}
+              <div className="absolute inset-0 grid place-items-center">
+                <span className="grid h-14 w-14 place-items-center rounded-full bg-white/90 text-black shadow-lg transition group-hover:scale-110">
+                  <Play className="ml-0.5 h-6 w-6" />
+                </span>
+              </div>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handlePlay}
+              aria-label={`Play ${video.title}`}
+              className="absolute inset-0 grid place-items-center bg-black/30 transition hover:bg-black/40"
+            >
+              <span className="grid h-14 w-14 place-items-center rounded-full bg-white/90 text-black shadow-lg">
+                <Play className="ml-0.5 h-6 w-6" />
+              </span>
+            </button>
+          )
         ) : null}
 
         {/* Live status badge */}

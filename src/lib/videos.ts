@@ -17,6 +17,18 @@ import exv4Video from "@/assets/data/exclusive/v4.mp4";
 import exv5Video from "@/assets/data/exclusive/v5.mp4";
 import exv6Video from "@/assets/data/exclusive/v6.mp4";
 
+// Import poster images
+import poster1 from "@/assets/data/fight/poster8.png";
+import poster2 from "@/assets/data/fight/poster2.png";
+import poster3 from "@/assets/data/fight/poster3.png";
+import poster4 from "@/assets/data/fight/poster4.png";
+import poster5 from "@/assets/data/fight/poster5.png";
+import poster7 from "@/assets/data/fight/poster7.png";
+import poster8 from "@/assets/data/fight/poster1.png";
+import poster9 from "@/assets/data/fight/poster9.png";
+import poster10 from "@/assets/data/fight/poster10.png";
+
+
 const BASE = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/";
 
 export interface VideoItem {
@@ -48,8 +60,23 @@ const sources = [
   "WhatCarCanYouGetForAGrand.mp4",
 ];
 
-const poster = (seed: string) =>
-  `https://picsum.photos/seed/${encodeURIComponent(seed)}/640/360?grayscale`;
+// Professional poster images array
+const posterImages = [
+  poster1,
+  poster2,
+  poster3,
+  poster4,
+  poster5,
+  poster7,
+  poster8,
+  poster9,
+  poster10,
+];
+
+const poster = (seed: string, index: number = 0) => {
+  // Use local poster images, cycling through available posters
+  return posterImages[index % posterImages.length];
+};
 
 function make(seed: string, i: number, data: Partial<VideoItem>): VideoItem {
   return {
@@ -60,7 +87,7 @@ function make(seed: string, i: number, data: Partial<VideoItem>): VideoItem {
     views: data.views ?? "128K",
     tag: data.tag ?? "Highlight",
     src: BASE + sources[i % sources.length],
-    poster: poster(seed),
+    poster: poster(seed, i),
     link: "#",
     ...data,
   };
@@ -75,7 +102,7 @@ export const liveVideos: VideoItem[] = [
     views: "42.1K",
     tag: "Main Event",
     src: live1Video,
-    poster: poster("live-1"),
+    poster: poster("live-1", 0),
     link: "#",
     reactions: { "❤️": 10400, "🔥": 8900, "😮": 5600, "👊": 12100, "😂": 1200 },
   },
@@ -87,7 +114,7 @@ export const liveVideos: VideoItem[] = [
     views: "31.7K",
     tag: "Co-Main",
     src: live2Video,
-    poster: poster("live-2"),
+    poster: poster("live-2", 0),
     link: "#",
     reactions: { "❤️": 8600, "🔥": 9800, "😮": 3200, "👊": 11500, "😂": 950 },
   },
@@ -99,7 +126,7 @@ export const liveVideos: VideoItem[] = [
     views: "18.9K",
     tag: "Prelims",
     src: live3Video,
-    poster: poster("live-3"),
+    poster: poster("live-3", 1),
     link: "#",
     reactions: { "❤️": 5200, "🔥": 6700, "😮": 2100, "👊": 8900, "😂": 680 },
   },
@@ -111,7 +138,7 @@ export const liveVideos: VideoItem[] = [
     views: "14.3K",
     tag: "Undercard",
     src: v4Video,
-    poster: poster("live-4"),
+    poster: poster("live-4", 3),
     link: "#",
     reactions: { "❤️": 3100, "🔥": 4200, "😮": 1800, "👊": 5600, "😂": 420 },
   },
@@ -123,7 +150,7 @@ export const liveVideos: VideoItem[] = [
     views: "22.5K",
     tag: "Interim Title",
     src: v5Video,
-    poster: poster("live-5"),
+    poster: poster("live-5", 4),
     link: "#",
     reactions: { "❤️": 9200, "🔥": 11300, "😮": 4700, "👊": 14200, "😂": 1500 },
   },
@@ -135,7 +162,7 @@ export const liveVideos: VideoItem[] = [
     views: "35.8K",
     tag: "Championship",
     src: v6Video,
-    poster: poster("live-6"),
+    poster: poster("live-6", 5),
     link: "#",
     reactions: { "❤️": 15600, "🔥": 18900, "😮": 7200, "👊": 21100, "😂": 2800 },
   },
@@ -150,7 +177,7 @@ export const trendingVideos: VideoItem[] = [
     views: "1.2M",
     tag: "Knockout",
     src: v1Video,
-    poster: poster("trend-1"),
+    poster: poster("trend-1", 6),
     link: "#",
   },
   {
@@ -161,7 +188,7 @@ export const trendingVideos: VideoItem[] = [
     views: "904K",
     tag: "Highlight",
     src: v2Video,
-    poster: poster("trend-2"),
+    poster: poster("trend-2", 7),
     link: "#",
   },
   {
@@ -172,7 +199,7 @@ export const trendingVideos: VideoItem[] = [
     views: "756K",
     tag: "Submission",
     src: v3Video,
-    poster: poster("trend-3"),
+    poster: poster("trend-3", 8),
     link: "#",
   },
   {
@@ -183,7 +210,7 @@ export const trendingVideos: VideoItem[] = [
     views: "645K",
     tag: "Grappling",
     src: v4Video,
-    poster: poster("trend-4"),
+    poster: poster("trend-4", 9),
     link: "#",
   },
   {
@@ -194,7 +221,7 @@ export const trendingVideos: VideoItem[] = [
     views: "892K",
     tag: "Striking",
     src: v5Video,
-    poster: poster("trend-5"),
+    poster: poster("trend-5", 10),
     link: "#",
   },
   {
@@ -205,7 +232,7 @@ export const trendingVideos: VideoItem[] = [
     views: "1.5M",
     tag: "Finals",
     src: v6Video,
-    poster: poster("trend-6"),
+    poster: poster("trend-6", 11),
     link: "#",
   },
 ];
@@ -263,7 +290,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "12.4K",
     tag: "PPV",
     src: exlive1Video,
-    poster: poster("xlive-1"),
+    poster: poster("xlive-1", 0),
     link: "#",
     reactions: { "❤️": 6200, "🔥": 7400, "😮": 2900, "👊": 9100, "😂": 750 },
   },
@@ -275,7 +302,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "8.9K",
     tag: "Backstage",
     src: exlive2Video,
-    poster: poster("xlive-2"),
+    poster: poster("xlive-2", 1),
     link: "#",
     reactions: { "❤️": 4100, "🔥": 5200, "😮": 1600, "👊": 6700, "😂": 520 },
   },
@@ -287,7 +314,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "5.2K",
     tag: "Corner Cam",
     src: exlive3Video,
-    poster: poster("xlive-3"),
+    poster: poster("xlive-3", 2),
     link: "#",
     reactions: { "❤️": 2300, "🔥": 3100, "😮": 980, "👊": 4200, "😂": 340 },
   },
@@ -302,7 +329,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "540K",
     tag: "Training",
     src: exv1Video,
-    poster: poster("xtrend-1"),
+    poster: poster("xtrend-1", 3),
     link: "#",
   },
   {
@@ -313,7 +340,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "412K",
     tag: "Full Fight",
     src: exv2Video,
-    poster: poster("xtrend-2"),
+    poster: poster("xtrend-2", 4),
     link: "#",
   },
   {
@@ -324,7 +351,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "300K",
     tag: "Highlights",
     src: exv3Video,
-    poster: poster("xtrend-3"),
+    poster: poster("xtrend-3", 5),
     link: "#",
   },
   {
@@ -335,7 +362,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "688K",
     tag: "Analysis",
     src: exv4Video,
-    poster: poster("xtrend-4"),
+    poster: poster("xtrend-4", 6),
     link: "#",
   },
   {
@@ -346,7 +373,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "256K",
     tag: "Interview",
     src: exv5Video,
-    poster: poster("xtrend-5"),
+    poster: poster("xtrend-5", 7),
     link: "#",
   },
   {
@@ -357,7 +384,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "489K",
     tag: "Access",
     src: exv6Video,
-    poster: poster("xtrend-6"),
+    poster: poster("xtrend-6", 8),
     link: "#",
   },
 ];
