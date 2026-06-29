@@ -5,13 +5,14 @@ const POPUNDER_SCRIPT_URL =
   "https://consciousdunkvastly.com/79/7d/b0/797db0781a89da82e23e454fdda499db.js";
 let popunderInjected = false;
 
-export default function PopunderModal({ delayMs = 10000 }: { delayMs?: number }) {
+export default function PopunderModal({ delayMs = 1200 }: { delayMs?: number }) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [, setHasInteracted] = useState(false);
   const timerRef = useRef<number | null>(null);
   const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const interactionTriggeredRef = useRef(false);
 
   const SESSION_KEY = "premium_popunder_seen";
 
@@ -25,25 +26,30 @@ export default function PopunderModal({ delayMs = 10000 }: { delayMs?: number })
       return;
     }
 
-    let cancelled = false;
-
-    const openAfterDelay = () => {
-      timerRef.current = window.setTimeout(() => {
-        if (cancelled) return;
-        setIsVisible(true);
-      }, delayMs);
-    };
-
-    // Start timer immediately when user enters the site (10 sec from now)
-    openAfterDelay();
-
     const cleanupTimer = () => {
-      cancelled = true;
       if (timerRef.current) {
-        clearTimeout(timerRef.current);
+        window.clearTimeout(timerRef.current);
         timerRef.current = null;
       }
     };
+
+    const handleFirstInteraction = () => {
+      if (interactionTriggeredRef.current || popunderInjected) return;
+      interactionTriggeredRef.current = true;
+      cleanupTimer();
+
+      timerRef.current = window.setTimeout(() => {
+        if (popunderInjected) return;
+        setIsVisible(true);
+        setHasInteracted(true);
+      }, delayMs);
+    };
+
+    const events: Array<keyof WindowEventMap> = ["pointerdown", "keydown", "touchstart", "scroll"];
+
+    events.forEach((eventName) => {
+      window.addEventListener(eventName, handleFirstInteraction, { passive: true, capture: true });
+    });
 
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
@@ -53,11 +59,11 @@ export default function PopunderModal({ delayMs = 10000 }: { delayMs?: number })
     window.addEventListener("beforeunload", cleanupTimer);
 
     return () => {
+      events.forEach((eventName) => {
+        window.removeEventListener(eventName, handleFirstInteraction, { capture: true });
+      });
       window.removeEventListener("beforeunload", cleanupTimer);
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
+      cleanupTimer();
     };
   }, [delayMs]);
 
