@@ -18,7 +18,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ThemeProvider>
-      <PopunderModal delayMs={22000} />
+      <PopunderModal delayMs={25000} />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />

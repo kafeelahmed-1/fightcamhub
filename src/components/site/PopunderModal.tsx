@@ -5,7 +5,7 @@ const POPUNDER_SCRIPT_URL =
   "https://consciousdunkvastly.com/79/7d/b0/797db0781a89da82e23e454fdda499db.js";
 let popunderInjected = false;
 
-export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number }) {
+export default function PopunderModal({ delayMs = 25000 }: { delayMs?: number }) {
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -13,7 +13,7 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
   const scriptRef = useRef<HTMLScriptElement | null>(null);
 
   const SESSION_KEY = "premium_popunder_seen";
-  const triggerDelayMs = Math.max(delayMs, 22000);
+  const triggerDelayMs = Math.max(delayMs, 25000);
 
   useEffect(() => {
     setMounted(true);
@@ -32,7 +32,7 @@ export default function PopunderModal({ delayMs = 22000 }: { delayMs?: number })
       }
     };
 
-    // Open popunder after 22 seconds of the user being on the site
+    // Open popunder after 25 seconds of the user being on the site
     timerRef.current = window.setTimeout(() => {
       if (popunderInjected) return;
       setIsVisible(true);

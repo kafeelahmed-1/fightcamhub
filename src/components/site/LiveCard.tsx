@@ -1,8 +1,6 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, MessageCircle, Bookmark, Heart, Repeat, Send, Download, Play } from "lucide-react";
 import type { VideoItem } from "@/lib/videos";
-import liveposter1 from "@/assets/data/fight/liveposter1.png";
-import liveposter2 from "@/assets/data/fight/liveposter2.png";
 
 interface FloatingHeart {
   id: string;
@@ -23,14 +21,8 @@ export const LiveCard = memo(function LiveCard({ video, monetizationUrl = "https
   
   const formattedLikes = "12K";
 
-  // Get poster for live2 and live3 cards
-  const getPosterImage = () => {
-    if (video.id === "live-2") return liveposter1;
-    if (video.id === "live-3") return liveposter2;
-    return null;
-  };
-
-  const posterImage = getPosterImage(); 
+  // Get poster from video data
+  const posterImage = video.poster; 
 
   const triggerHeartsBurst = () => {
     const burstCount = Math.floor(Math.random() * 4) + 5;

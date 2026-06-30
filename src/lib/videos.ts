@@ -18,15 +18,26 @@ import exv5Video from "@/assets/data/exclusive/v5.mp4";
 import exv6Video from "@/assets/data/exclusive/v6.mp4";
 
 // Import poster images
-import poster1 from "@/assets/data/fight/poster8.png";
+import poster1 from "@/assets/data/fight/poster1.png";
 import poster2 from "@/assets/data/fight/poster2.png";
 import poster3 from "@/assets/data/fight/poster3.png";
 import poster4 from "@/assets/data/fight/poster4.png";
 import poster5 from "@/assets/data/fight/poster5.png";
 import poster7 from "@/assets/data/fight/poster7.png";
-import poster8 from "@/assets/data/fight/poster1.png";
+import poster8 from "@/assets/data/fight/poster8.png";
 import poster9 from "@/assets/data/fight/poster9.png";
 import poster10 from "@/assets/data/fight/poster10.png";
+
+// Import exclusive poster images
+import exPoster1 from "@/assets/data/exclusive/a2.webp";
+import exPoster2 from "@/assets/data/exclusive/a3.jpg";
+import exPoster3 from "@/assets/data/exclusive/a4.jpg";
+import exPoster4 from "@/assets/data/exclusive/a6.jpg";
+import exPoster5 from "@/assets/data/exclusive/a8.jpg";
+import exPoster6 from "@/assets/data/exclusive/a9.jpg";
+import exPoster7 from "@/assets/data/exclusive/a10.jpg";
+import exPoster8 from "@/assets/data/exclusive/a12.jpg";
+import exPoster9 from "@/assets/data/exclusive/a13.jpg";
 
 
 const BASE = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/";
@@ -73,9 +84,27 @@ const posterImages = [
   poster10,
 ];
 
+// Exclusive poster images array
+const exclusivePosterImages = [
+  exPoster1,
+  exPoster2,
+  exPoster3,
+  exPoster4,
+  exPoster5,
+  exPoster6,
+  exPoster7,
+  exPoster8,
+  exPoster9,
+];
+
 const poster = (seed: string, index: number = 0) => {
   // Use local poster images, cycling through available posters
   return posterImages[index % posterImages.length];
+};
+
+const exclusivePoster = (seed: string, index: number = 0) => {
+  // Use exclusive poster images, cycling through available posters
+  return exclusivePosterImages[index % exclusivePosterImages.length];
 };
 
 function make(seed: string, i: number, data: Partial<VideoItem>): VideoItem {
@@ -290,7 +319,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "12.4K",
     tag: "PPV",
     src: exlive1Video,
-    poster: poster("xlive-1", 0),
+    poster: exclusivePoster("xlive-1", 0),
     link: "#",
     reactions: { "❤️": 6200, "🔥": 7400, "😮": 2900, "👊": 9100, "😂": 750 },
   },
@@ -302,7 +331,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "8.9K",
     tag: "Backstage",
     src: exlive2Video,
-    poster: poster("xlive-2", 1),
+    poster: exclusivePoster("xlive-2", 1),
     link: "#",
     reactions: { "❤️": 4100, "🔥": 5200, "😮": 1600, "👊": 6700, "😂": 520 },
   },
@@ -314,7 +343,7 @@ export const exclusiveLive: VideoItem[] = [
     views: "5.2K",
     tag: "Corner Cam",
     src: exlive3Video,
-    poster: poster("xlive-3", 2),
+    poster: exclusivePoster("xlive-3", 2),
     link: "#",
     reactions: { "❤️": 2300, "🔥": 3100, "😮": 980, "👊": 4200, "😂": 340 },
   },
@@ -329,7 +358,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "540K",
     tag: "Training",
     src: exv1Video,
-    poster: poster("xtrend-1", 3),
+    poster: exclusivePoster("xtrend-1", 3),
     link: "#",
   },
   {
@@ -340,7 +369,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "412K",
     tag: "Full Fight",
     src: exv2Video,
-    poster: poster("xtrend-2", 4),
+    poster: exclusivePoster("xtrend-2", 4),
     link: "#",
   },
   {
@@ -351,7 +380,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "300K",
     tag: "Highlights",
     src: exv3Video,
-    poster: poster("xtrend-3", 5),
+    poster: exclusivePoster("xtrend-3", 5),
     link: "#",
   },
   {
@@ -362,7 +391,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "688K",
     tag: "Analysis",
     src: exv4Video,
-    poster: poster("xtrend-4", 6),
+    poster: exclusivePoster("xtrend-4", 6),
     link: "#",
   },
   {
@@ -373,7 +402,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "256K",
     tag: "Interview",
     src: exv5Video,
-    poster: poster("xtrend-5", 7),
+    poster: exclusivePoster("xtrend-5", 7),
     link: "#",
   },
   {
@@ -384,7 +413,7 @@ export const exclusiveTrending: VideoItem[] = [
     views: "489K",
     tag: "Access",
     src: exv6Video,
-    poster: poster("xtrend-6", 8),
+    poster: exclusivePoster("xtrend-6", 8),
     link: "#",
   },
 ];
